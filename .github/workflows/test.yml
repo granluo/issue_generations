@@ -1,26 +1,26 @@
 name: test_issue_generation
 
 on:
-        pull_request:
-                paths:
-                        - '.github/workflows/test.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/test.yml'
 jobs:
-        get_link:
-                runs-on: macOS-latest
-                steps:
-                        - uses: actions/checkout@v2
-                        - name: Get Job Link
-                          run: |
-                                  echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-                                  echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> id_artifact.txt
-                        - uses: actions/upload-artifact@v2
-                          with: job_log_link
-                            name: link
-                            path: id_artifact.txt
-        dummy_job:
-                runs-on: macOS-latest
-                steps:
-                        - uses: actions/checkout@v2
-                        - name: Get Job Link
-                          run: |
-                                  echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+  get_link:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Job Link
+        run: |
+          echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> id_artifact.txt
+      - uses: actions/upload-artifact@v2
+        with: job_log_link
+          name: link
+          path: id_artifact.txt
+  dummy_job:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Job Link
+        run: |
+          echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
