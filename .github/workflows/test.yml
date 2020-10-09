@@ -14,8 +14,8 @@ jobs:
           echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> id_artifact.txt
       - uses: actions/upload-artifact@v2
-        with: job_log_link
-          name: link
+        with: 
+          name: job_log_link
           path: id_artifact.txt
   dummy_job:
     runs-on: macOS-latest
