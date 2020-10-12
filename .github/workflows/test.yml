@@ -17,6 +17,7 @@ jobs:
         with: 
           name: job_log_link
           path: id_artifact.txt
+
   dummy_job:
     runs-on: macOS-latest
     steps:
