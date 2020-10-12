@@ -24,3 +24,13 @@ jobs:
       - name: Get Job Link
         run: |
           echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+      - uses: actions/download-artifact@v2
+        with: 
+          name: job_log_link
+      - name: Add Link
+        run: |
+          echo -e "\nhttps://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> id_artifact.txt
+      - uses: actions/upload-artifact@v2
+        with: 
+          name: job_log_link
+          path: id_artifact.txt
