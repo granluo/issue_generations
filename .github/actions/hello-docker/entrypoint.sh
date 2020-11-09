@@ -1,4 +1,6 @@
-#!/bin/sh -l
+#!/bin/sh
+
+set -ex
 
 python test.py
 echo "::error :: Error message"
