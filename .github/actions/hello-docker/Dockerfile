@@ -1,11 +1,11 @@
 FROM ruby:2.7.2
 
-ENV PYTHONUNBUFFERED=1
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN mkdir /myapp
+WORKDIR /myapp
+COPY Gemfile /myapp/Gemfile
+COPY Gemfile.lock /myapp/Gemfile.lock
+RUN bundle install
+COPY . /myapp
 
-COPY entrypoint.sh /entrypoint.sh
-COPY test.py /test.py
-
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/app.rb" ]
