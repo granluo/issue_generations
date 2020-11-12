@@ -2,9 +2,10 @@
 
 set -ex
 
-python /test.py
 echo "::error :: Error message"
 echo "Hello World"
+
+ruby app.rb
 
 echo "Hola $1"
 
