@@ -5,7 +5,7 @@ set -ex
 echo "::error :: Error message"
 echo "Hello World"
 
-ruby app.rb
+ruby myapp/app.rb
 
 echo "Hola $1"
 
