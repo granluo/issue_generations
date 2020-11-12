@@ -6,11 +6,17 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  access-token:
+    description: 'access token'
+    required: true
 outputs:
   time: # id of output
     description: 'The time we greeted you'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    GITHUB_TOKEN: ${{ ecrets.GITHUB_TOKEN }}
   args:
     - ${{ inputs.who-to-greet }}
+    - ${{ inputs.access-token }}
