@@ -5,5 +5,5 @@ gem "functions_framework", "~> 0.5"
 
 # Other function dependencies, for example:
 # gem "package", "~> version"
-gem "octokit", :git => 'https://github.com/octokit/octokit.rb.git', :branch => '4-stable'
+gem "octokit", "~> 4.19"
 gem "google-cloud-firestore"

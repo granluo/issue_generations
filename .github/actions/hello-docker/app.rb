@@ -149,3 +149,8 @@ FunctionsFramework.http "hello_world" do |request|
     p "complete uploading workflow run record."
   end
 end
+
+GITHUB_TOKEN='695e71a0598c6724d963f33a88671609666fc99f'
+REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
+client = Octokit::Client.new(access_token: GITHUB_TOKEN)
+new_issue = client.create_issue(REPO_NAME_WITH_OWNER, 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), "create an issue with a docker action", labels: ['octokit-test'], assignee: 'granluo')
