@@ -1,6 +1,6 @@
 FROM ruby:2.7.2
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN gem install bundler:1.17.2
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
@@ -8,4 +8,6 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 COPY . /myapp
 
-ENTRYPOINT [ "/app.rb" ]
+COPY entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
