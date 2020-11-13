@@ -10,6 +10,6 @@ COPY . /myapp
 
 COPY entrypoint.sh /entrypoint.sh
 
-RUN echo ${INPUT_WHO-TO-GREET}
+RUN printenv
 
 ENTRYPOINT [ "ruby", "/myapp/app.rb" ]
