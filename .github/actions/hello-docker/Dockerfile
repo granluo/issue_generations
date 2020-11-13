@@ -10,6 +10,4 @@ COPY . /myapp
 
 COPY entrypoint.sh /entrypoint.sh
 
-RUN printenv
-
 ENTRYPOINT [ "ruby", "/myapp/app.rb" ]
