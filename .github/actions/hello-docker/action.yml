@@ -16,7 +16,7 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    GTHUB_TOKEN: ${{ inputs.access-token }}
+    GITHUB_TOKEN: ${{ inputs.access-token }}
   args:
     - ${{ inputs.who-to-greet }}
     - ${{ inputs.access-token }}

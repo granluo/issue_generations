@@ -2,13 +2,14 @@
 
 set -ex
 
-echo "::error :: Error message"
+# echo "::error :: Error message"
 echo "Hello World"
 
 ls -a
+echo "Hola $1"
+echo "Hola $2"
 
 ruby /myapp/app.rb
 
-echo "Hola $1"
 
 
