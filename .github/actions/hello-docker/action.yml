@@ -13,9 +13,7 @@ outputs:
   time: # id of output
     description: 'The time we greeted you'
 runs:
-  if: ${{ inputs.who-to-greet == 'Not Mona the Octocat' }}
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.access-token }}
     - ${{ inputs.who-to-greet }}

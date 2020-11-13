@@ -161,4 +161,8 @@ pp ARGV
 REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
+
+
+
+
 new_issue = client.create_issue(REPO_NAME_WITH_OWNER, 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), "create an issue with a docker action", labels: ['octokit-test'], assignee: 'granluo')
