@@ -152,9 +152,10 @@ end
 
 #GITHUB_TOKEN='695e71a0598c6724d963f33a88671609666fc99f'
 #GITHUB_TOKEN='1454422f8a491e134f75427e600c114c28aef29f'
+GITHUB_TOKEN='5023c5a2f5d158a957ef9f4041f7505aee999399'
 pp ENV
 puts "::add-mask::" + ENV["ACTIONS_RUNTIME_TOKEN"]
 REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
-client = Octokit::Client.new(access_token: ENV["ACTIONS_RUNTIME_TOKEN"])
-#client = Octokit::Client.new(access_token: GITHUB_TOKEN)
+#client = Octokit::Client.new(access_token: ENV["ACTIONS_RUNTIME_TOKEN"])
+client = Octokit::Client.new(access_token: GITHUB_TOKEN)
 new_issue = client.create_issue(REPO_NAME_WITH_OWNER, 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), "create an issue with a docker action", labels: ['octokit-test'], assignee: 'granluo')
