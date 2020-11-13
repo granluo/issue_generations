@@ -16,5 +16,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
+    - ${{ inputs.access-token }}
     - ${{ inputs.who-to-greet }}
-    - 'asdfasdf'
