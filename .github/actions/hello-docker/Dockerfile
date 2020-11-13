@@ -10,4 +10,4 @@ COPY . /myapp
 
 COPY entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "ruby", "/myapp/app.rb" ]
