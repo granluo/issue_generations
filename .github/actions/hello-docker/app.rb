@@ -184,7 +184,7 @@ text << " -------- |"
 text << "\n"
 
 excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(" ")
-puts "Excluded workflow files: " + exluded_workflows.join(",")
+puts "Excluded workflow files: " + excluded_workflows.join(",")
 for wf in workflows.workflows do
   workflow_file = File.basename(wf.path)
   puts workflow_file
