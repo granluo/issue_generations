@@ -9,6 +9,10 @@ inputs:
   access-token:
     description: 'access token'
     required: true
+  issue-label:
+    description: 'Testing label'
+    required: true
+    default: 'nightly-testing'
 outputs:
   time: # id of output
     description: 'The time we greeted you'

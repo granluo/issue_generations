@@ -153,7 +153,7 @@ end
 #GITHUB_TOKEN='695e71a0598c6724d963f33a88671609666fc99f'
 #GITHUB_TOKEN='1454422f8a491e134f75427e600c114c28aef29f'
 #GITHUB_TOKEN='5023c5a2f5d158a957ef9f4041f7505aee999399'
-#GITHUB_TOKEN='1d95f4b4d680e937987334ebc0d109d4a39ff0399'
+#GITHUB_TOKEN='1d95f4b4d680e937987334ebc0d109d4a39ff039'
 pp ENV
 puts "-------"
 pp ARGV
@@ -170,8 +170,22 @@ puts client.workflows(REPO_NAME_WITH_OWNER).total_count
 # puts client.workflow_runs(REPO_NAME_WITH_OWNER, 'main.yml').workflow_runs[0].event
 t1 = Time.now
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
+text = File.read("template.md")
+text = text.gsub("TEST_ISSUE_TITLE", "Nightly testing report." )
+text = text.gsub("TEST_WORKFLOW", "Workflows")
+
+cur_time = Time.now.utc.localtime("-07:00")
+
+text << "This issue is generated at %s\n" % [cur_time.strftime('%m/%d/%Y %H:%M %p') ]
+text << "| Workflow |"
+text << (cur_time - 86400).strftime('%m/%d') + "|"
+text << "\n| -------- |"
+text << " -------- |"
+text << "\n"
 for wf in workflows.workflows do
   puts File.basename(wf.path)
+  workflow_text = String.new ""
+  workflow_text << "[%s](%s)" % [wf.name, wf.html_url] + "|"
   runs = client.workflow_runs(REPO_NAME_WITH_OWNER, File.basename(wf.path), :event => "schedule").workflow_runs 
   runs = runs.sort_by { |run| -run.created_at.to_i }
   #puts runs[0].event + runs[0].url + " " + runs[0].created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
@@ -179,16 +193,13 @@ for wf in workflows.workflows do
   if latest_run.nil?
     puts "no schedule runs found."
   else
-    puts latest_run.event + latest_run.url + " " + latest_run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
+    puts latest_run.event + latest_run.html_url + " " + latest_run.created_at.to_s + " " + latest_run.conclusion#, run.created_at#, t1 - run.created_at < 86400
+    workflow_text << "[%s](%s)" % [latest_run.conclusion, latest_run.html_url]+ "|"
+    text << workflow_text + "\n" unless latest_run.conclusion == "success"
   end
   for run in runs do
     #puts run.event + run.url + " " + run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
   end
 end
 
-
-
-
-
-
-#new_issue = client.create_issue(REPO_NAME_WITH_OWNER, 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), "create an issue with a docker action", labels: ['octokit-test'], assignee: 'granluo')
+new_issue = client.create_issue('granluo/issue_generations', 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), text, labels: [ENV['INPUT_ISSUE-LABEL']], assignee: 'granluo')
