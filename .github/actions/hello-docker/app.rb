@@ -158,7 +158,7 @@ pp ENV
 puts "-------"
 pp ARGV
 #puts "::add-mask::" + ENV["INPUT_ACCESS_TOKEN"]
-REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
+#REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
 REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
@@ -170,7 +170,7 @@ puts client.workflows(REPO_NAME_WITH_OWNER).total_count
 # puts client.workflow_runs(REPO_NAME_WITH_OWNER, 'main.yml').workflow_runs[0].event
 t1 = Time.now
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
-text = File.read("template.md")
+text = File.read("/myapp/template.md")
 text = text.gsub("TEST_ISSUE_TITLE", "Nightly testing report." )
 text = text.gsub("TEST_WORKFLOW", "Workflows")
 
