@@ -16,6 +16,7 @@ inputs:
   exclude-workflow-files:
     description: 'Excluded yml files'
     required: false
+    default: ''
 outputs:
   time: # id of output
     description: 'The time we greeted you'
