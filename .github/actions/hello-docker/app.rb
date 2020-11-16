@@ -182,8 +182,11 @@ text << (cur_time - 86400).strftime('%m/%d') + "|"
 text << "\n| -------- |"
 text << " -------- |"
 text << "\n"
+
+excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES']
 for wf in workflows.workflows do
-  puts File.basename(wf.path)
+  workflow_file = File.basename(wf.path)
+  puts workflow_file
   workflow_text = String.new ""
   workflow_text << "[%s](%s)" % [wf.name, wf.html_url] + "|"
   runs = client.workflow_runs(REPO_NAME_WITH_OWNER, File.basename(wf.path), :event => "schedule").workflow_runs 
@@ -195,7 +198,7 @@ for wf in workflows.workflows do
   else
     puts latest_run.event + latest_run.html_url + " " + latest_run.created_at.to_s + " " + latest_run.conclusion#, run.created_at#, t1 - run.created_at < 86400
     workflow_text << "[%s](%s)" % [latest_run.conclusion, latest_run.html_url]+ "|"
-    text << workflow_text + "\n" unless latest_run.conclusion == "success"
+    text << workflow_text + "\n" unless latest_run.conclusion == "success" && excluded_workflows.exclude?(workflow_file)
   end
   for run in runs do
     #puts run.event + run.url + " " + run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400

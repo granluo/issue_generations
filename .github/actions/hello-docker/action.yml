@@ -13,6 +13,9 @@ inputs:
     description: 'Testing label'
     required: true
     default: 'nightly-testing'
+  exclude-workflow-files:
+    description: 'Excluded yml files'
+    required: false
 outputs:
   time: # id of output
     description: 'The time we greeted you'
