@@ -161,7 +161,7 @@ pp ARGV
 REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
-puts client.workflows(REPO_NAME_WITH_OWNER) 
+puts client.workflows(REPO_NAME_WITH_OWNER).total_count
 
 
 
