@@ -198,7 +198,7 @@ for wf in workflows.workflows do
   else
     puts latest_run.event + latest_run.html_url + " " + latest_run.created_at.to_s + " " + latest_run.conclusion#, run.created_at#, t1 - run.created_at < 86400
     workflow_text << "[%s](%s)" % [latest_run.conclusion, latest_run.html_url]+ "|"
-    text << workflow_text + "\n" unless latest_run.conclusion == "success" && excluded_workflows.exclude?(workflow_file)
+    text << workflow_text + "\n" unless latest_run.conclusion == "success" && !excluded_workflows.include?(workflow_file)
   end
   for run in runs do
     #puts run.event + run.url + " " + run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
