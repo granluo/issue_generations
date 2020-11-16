@@ -153,17 +153,18 @@ end
 #GITHUB_TOKEN='695e71a0598c6724d963f33a88671609666fc99f'
 #GITHUB_TOKEN='1454422f8a491e134f75427e600c114c28aef29f'
 #GITHUB_TOKEN='5023c5a2f5d158a957ef9f4041f7505aee999399'
-# GITHUB_TOKEN='1d95f4b4d680e937987334ebc0d109d4a39ff0399'
+#GITHUB_TOKEN='1d95f4b4d680e937987334ebc0d109d4a39ff0399'
 pp ENV
 puts "-------"
 pp ARGV
 #puts "::add-mask::" + ENV["INPUT_ACCESS_TOKEN"]
 REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
+REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
 puts client.workflows(REPO_NAME_WITH_OWNER).total_count
-puts client.workflows(REPO_NAME_WITH_OWNER).workflows
-puts client.workflows(REPO_NAME_WITH_OWNER).workflows[0]
+#puts client.workflows(REPO_NAME_WITH_OWNER).workflows
+#puts client.workflows(REPO_NAME_WITH_OWNER).workflows[0]
 # puts client.workflows(REPO_NAME_WITH_OWNER).workflows[0].path
 # puts client.workflow_runs(REPO_NAME_WITH_OWNER, 'main.yml', :event => "push").workflow_runs[0].event
 # puts client.workflow_runs(REPO_NAME_WITH_OWNER, 'main.yml').workflow_runs[0].event
@@ -171,12 +172,18 @@ t1 = Time.now
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
 for wf in workflows.workflows do
   puts File.basename(wf.path)
-  runs = client.workflow_runs(REPO_NAME_WITH_OWNER, File.basename(wf.path), :event => "push").workflow_runs 
-  runs = runs.sort_by { |run| run.created_at.to_i }
-  puts runs[0].created_at
-#  for run in runs do
-#    puts run.created_at#, t1 - run.created_at < 86400
-#  end
+  runs = client.workflow_runs(REPO_NAME_WITH_OWNER, File.basename(wf.path), :event => "schedule").workflow_runs 
+  runs = runs.sort_by { |run| -run.created_at.to_i }
+  #puts runs[0].event + runs[0].url + " " + runs[0].created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
+  latest_run = runs[0]
+  if latest_run.nil?
+    puts "no schedule runs found."
+  else
+    puts latest_run.event + latest_run.url + " " + latest_run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
+  end
+  for run in runs do
+    #puts run.event + run.url + " " + run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
+  end
 end
 
 
