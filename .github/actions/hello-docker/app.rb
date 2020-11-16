@@ -184,6 +184,7 @@ text << " -------- |"
 text << "\n"
 
 excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(" ")
+puts "Excluded workflow files: " + exluded_workflows.join(",")
 for wf in workflows.workflows do
   workflow_file = File.basename(wf.path)
   puts workflow_file
@@ -195,10 +196,12 @@ for wf in workflows.workflows do
   latest_run = runs[0]
   if latest_run.nil?
     puts "no schedule runs found."
+  elsif excluded_workflows.include?(workflow_file)
+    puts workflow_file + "is exluded in the report."
   else
     puts latest_run.event + latest_run.html_url + " " + latest_run.created_at.to_s + " " + latest_run.conclusion#, run.created_at#, t1 - run.created_at < 86400
     workflow_text << "[%s](%s)" % [latest_run.conclusion, latest_run.html_url]+ "|"
-    text << workflow_text + "\n" unless latest_run.conclusion == "success" && !excluded_workflows.include?(workflow_file)
+    text << workflow_text + "\n" unless latest_run.conclusion == "success"
   end
   for run in runs do
     #puts run.event + run.url + " " + run.created_at.to_s#, run.created_at#, t1 - run.created_at < 86400
