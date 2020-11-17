@@ -150,6 +150,7 @@ FunctionsFramework.http "hello_world" do |request|
   end
 end
 
+
 #GITHUB_TOKEN='695e71a0598c6724d963f33a88671609666fc99f'
 #GITHUB_TOKEN='1454422f8a491e134f75427e600c114c28aef29f'
 #GITHUB_TOKEN='5023c5a2f5d158a957ef9f4041f7505aee999399'
@@ -161,6 +162,9 @@ pp ARGV
 #REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
 REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
+last_issue = client.list_issues('granluo/issue_generations', :labels => [ENV['INPUT_ISSUE-LABEL']])[0]
+puts "The last issue id is "
+puts last_issue.id
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
 puts client.workflows(REPO_NAME_WITH_OWNER).total_count
 #puts client.workflows(REPO_NAME_WITH_OWNER).workflows
