@@ -162,7 +162,7 @@ pp ARGV
 #REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
 REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
-last_issue = client.list_issues('granluo/issue_generations', :labels => [ENV['INPUT_ISSUE-LABEL']])[0]
+last_issue = client.list_issues('granluo/issue_generations', :labels => ENV['INPUT_ISSUE-LABEL'])[0]
 puts "The last issue id is "
 puts last_issue.id
 #client = Octokit::Client.new(access_token: GITHUB_TOKEN)
