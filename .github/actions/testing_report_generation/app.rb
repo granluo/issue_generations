@@ -18,7 +18,7 @@ assignee = ENV['INPUT_ASSIGNEES']
 
 class Table
   def initialize(title)
-    cur_time = Time.now.utc.localtime("-07:00")
+    cur_time = Time.now.utc.localtime("-08:00")
     @text = String.new ""
     @text << "# %s\n" % [title]
     @text << "Failures are detected in workflow(s)\n"
@@ -67,5 +67,5 @@ end
 if not last_issue.nil? && last_issue.state == "open"
   client.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
 else
-  new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-07:00").strftime('%m/%d/%Y %H:%M %p'), report.get_report, labels: issue_labels, assignee: assignee)
+  new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-08:00").strftime('%m/%d/%Y %H:%M %p'), report.get_report, labels: issue_labels, assignee: assignee)
 end
