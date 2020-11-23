@@ -9,6 +9,4 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 COPY . /myapp
 
-COPY entrypoint.sh /entrypoint.sh
-
 ENTRYPOINT [ "ruby", "/myapp/app.rb" ]
