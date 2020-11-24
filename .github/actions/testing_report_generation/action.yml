@@ -5,7 +5,7 @@ inputs:
     description: 'access token'
     required: true
   issue-labels:
-    description: 'Testing labels(delimited by comma or space)'
+    description: 'Testing labels(delimited by comma)'
     required: true
     default: 'nightly-testing'
   assignee:
@@ -13,7 +13,7 @@ inputs:
     required: false
     default: ''
   exclude-workflow-files:
-    description: 'Excluded yml files(delimited by comma or space)'
+    description: 'Excluded yml files(delimited by comma)'
     required: false
 runs:
   using: 'docker'

@@ -8,12 +8,12 @@ pp ENV
 REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 REPORT_TESTING_REPO = 'granluo/issue_generations'.freeze
 excluded_workflows = []
-issue_labels = []
+issue_labels = ""
 if not ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].nil?
   excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(/[ ,]/)
 end
 if not ENV['INPUT_ISSUE-LABELS'].nil?
-  issue_labels = ENV['INPUT_ISSUE-LABELS'].split(/[ ,]/)
+  issue_labels = ENV['INPUT_ISSUE-LABELS']
 end
 assignee = ENV['INPUT_ASSIGNEES']
 
