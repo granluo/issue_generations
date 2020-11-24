@@ -43,7 +43,7 @@ end
 
 report = Table.new("Nightly Testing Report")
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
-last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels)[0]
+last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels, :state => "all")[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
 
 puts "Excluded workflow files: " + excluded_workflows.join(",")
