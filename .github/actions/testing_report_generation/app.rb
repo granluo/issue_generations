@@ -28,8 +28,7 @@ class Table
     @is_empty_table = true
     @text = String.new ""
     @text << "# %s\n" % [title]
-    @text << "Failures are detected in workflow(s)\n"
-    @text << "This issue is generated at %s\n" % [cur_time.strftime('%m/%d/%Y %H:%M %p') ]
+    @text << "This issue is generated at %s\n" % [cur_time.strftime('%m/%d/%Y %H:%M %p %:z') ]
     @text << "| Workflow |"
     @text << (cur_time - 86400).strftime('%m/%d') + "|"
     @text << "\n| -------- |"
@@ -59,6 +58,10 @@ workflows = client.workflows(REPO_NAME_WITH_OWNER)
 
 puts "Excluded workflow files: " + excluded_workflows.join(",")
 for wf in workflows.workflows do
+  # skip if it is the issue generation workflow.
+  if wf.name == ENV["GITHUB_WORKFLOW"]
+    next
+  end
   workflow_file = File.basename(wf.path)
   puts workflow_file
   workflow_text = "[%s](%s)" % [wf.name, wf.html_url]
@@ -76,7 +79,7 @@ for wf in workflows.workflows do
     puts latest_run.conclusion
     result_text = "[%s](%s)" % [latest_run.conclusion.nil? ? "in_process" : latest_run.conclusion, latest_run.html_url]
     if latest_run.conclusion == "success"
-      success_report.add_workflow_run_and_result(workflow_text, result_text)
+      # success_report.add_workflow_run_and_result(workflow_text, result_text)
     else
       # failure_report.add_workflow_run_and_result(workflow_text, result_text)
     end
