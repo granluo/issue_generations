@@ -69,7 +69,7 @@ for wf in workflows.workflows do
 end
 
 puts "issue %s is currently %s" % [last_issue.number, last_issue.state]
-if not last_issue.nil? && last_issue.state == "open"
+if  !last_issue.nil? and last_issue.state == "open"
   puts last_issue.number
   client.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
   last_issue.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
