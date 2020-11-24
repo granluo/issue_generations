@@ -20,6 +20,7 @@ assignee = ENV['INPUT_ASSIGNEES']
 class Table
   def initialize(title)
     cur_time = Time.now.utc.localtime("-08:00")
+    @is_empty_table = true
     @text = String.new ""
     @text << "# %s\n" % [title]
     @text << "Failures are detected in workflow(s)\n"
@@ -32,16 +33,21 @@ class Table
   end 
 
   def add_workflow_run_and_result(workflow, result)
+    @is_empty_table = false
     record = "| %s | %s |\n" % [workflow, result]
     @text << record
   end 
 
   def get_report()
+    if @is_empty_table
+      return nil
+    end
     return @text
   end 
 end 
 
-report = Table.new("Nightly Testing Report")
+failure_report = Table.new("Nightly Testing Report")
+success_report = Table.new("Nightly Testing Report")
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels, :state => "all")[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
@@ -64,15 +70,28 @@ for wf in workflows.workflows do
     puts latest_run.created_at.to_s + " "
     puts latest_run.conclusion
     result_text = "[%s](%s)" % [latest_run.conclusion.nil? ? "in_process" : latest_run.conclusion, latest_run.html_url]
-    report.add_workflow_run_and_result(workflow_text, result_text) unless latest_run.conclusion == "success"
+    if latest_run.conclusion == "success"
+      success_report.add_workflow_run_and_result(workflow_text, result_text)
+    else
+      failure_report.add_workflow_run_and_result(workflow_text, result_text)
+    end
   end
 end
 
 puts "issue %s is currently %s" % [last_issue.number, last_issue.state]
-if  !last_issue.nil? and last_issue.state == "open"
+if failure_report.get_report.nil? && success_report.get_report.nil?
+  if last_issue.state == "open"
+    client.add_comment(REPORT_TESTING_REPO, last_issue.number, "Nightly Testings were not run.")
+  else
+    client.create_issue(REPORT_TESTING_REPO, "Nightly Testing Report", "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
+  end
+elsif failure_report.get_report.nil? and last_issue.state == "open"
+  client.add_comment(REPORT_TESTING_REPO, last_issue.number, success_report.get_report)
+  client.close_issue(REPORT_TESTING_REPO, last_issue.number)
+elsif !last_issue.nil? and last_issue.state == "open"
   puts last_issue.number
-  client.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
-  last_issue.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
+  client.add_comment(REPORT_TESTING_REPO, last_issue.number,failure_report.get_report)
+  last_issue.add_comment(REPORT_TESTING_REPO, last_issue.number,failure_report.get_report)
 else
-  new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-08:00").strftime('%m/%d/%Y %H:%M %p'), report.get_report, labels: issue_labels, assignee: assignee)
+  new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-08:00").strftime('%m/%d/%Y %H:%M %p'), failure_report.get_report, labels: issue_labels, assignee: assignee)
 end
