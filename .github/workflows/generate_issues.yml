@@ -18,4 +18,4 @@ jobs:
       with:
         access-token: '${{ secrets.ISSUE_TEST_TOKEN }}'
         exclude-workflow-files: 'performance.yml performance-integration-tests.yml'
-        issue-labels: 'nightly-testihg'
+        issue-labels: 'nightly-testing'
