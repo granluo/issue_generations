@@ -8,6 +8,10 @@ inputs:
     description: 'Testing labels(delimited by comma)'
     required: true
     default: 'nightly-testing'
+  issue-title:
+    description: 'Title of a Github Issue'
+    required: true
+    default: 'Nightly Testing Report'
   assignee:
     description: 'Assignee of this issue'
     required: false

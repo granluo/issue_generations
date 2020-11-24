@@ -9,11 +9,16 @@ REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 REPORT_TESTING_REPO = 'granluo/issue_generations'.freeze
 excluded_workflows = []
 issue_labels = ""
+issue_title = "Auto-Generated Testing Report"
+
 if not ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].nil?
   excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(/[ ,]/)
 end
 if not ENV['INPUT_ISSUE-LABELS'].nil?
   issue_labels = ENV['INPUT_ISSUE-LABELS']
+end
+if not ENV['INPUT_ISSUE-TITLE'].nil?
+  issue_title = ENV['INPUT_ISSUE-TITLE']
 end
 assignee = ENV['INPUT_ASSIGNEES']
 
@@ -46,8 +51,8 @@ class Table
   end 
 end 
 
-failure_report = Table.new("Nightly Testing Report")
-success_report = Table.new("Nightly Testing Report")
+failure_report = Table.new(issue_title)
+success_report = Table.new(issue_title)
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
 last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels, :state => "all")[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
@@ -83,7 +88,7 @@ if failure_report.get_report.nil? && success_report.get_report.nil?
   if last_issue.state == "open"
     client.add_comment(REPORT_TESTING_REPO, last_issue.number, "Nightly Testings were not run.")
   else
-    client.create_issue(REPORT_TESTING_REPO, "Nightly Testing Report", "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
+    client.create_issue(REPORT_TESTING_REPO, issue_title, "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
   end
 elsif failure_report.get_report.nil? and last_issue.state == "open"
   client.add_comment(REPORT_TESTING_REPO, last_issue.number, success_report.get_report)
