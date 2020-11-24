@@ -1,5 +1,7 @@
-name: generate_issue
+name: generate a report
+
 on:
+  workflow_dispatch:
   pull_request:
     paths:
     - '.github/workflows/generate_issues.yml'
@@ -7,7 +9,7 @@ on:
     # Run every day at 4am (PST) - cron uses UTC times
     - cron:  '0 12 * * *'
 jobs:
-  hello_world_job:
+  generate_an_issue:
     runs-on: ubuntu-latest
     name: Generate a nightly testing report issue
     steps:
@@ -17,3 +19,4 @@ jobs:
       with:
         access-token: '${{ secrets.ISSUE_TEST_TOKEN }}'
         exclude-workflow-files: 'performance.yml performance-integration-tests.yml'
+        issue-labels: 'nightly-testing'
