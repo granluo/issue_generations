@@ -4,6 +4,7 @@ require 'octokit'
 require 'optparse'
 require "json"
 
+pp ENV
 REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
 REPORT_TESTING_REPO = 'granluo/issue_generations'.freeze
 excluded_workflows = []
@@ -42,7 +43,7 @@ end
 
 report = Table.new("Nightly Testing Report")
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
-last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => ENV['INPUT_ISSUE-LABEL'])[0]
+last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels)[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
 
 puts "Excluded workflow files: " + excluded_workflows.join(",")
