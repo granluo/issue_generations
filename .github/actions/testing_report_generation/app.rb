@@ -5,22 +5,22 @@ require 'optparse'
 require "json"
 
 pp ENV
-REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
+REPO_NAME_WITH_OWNER = ENV['GITHUB_REPOSITORY']
 NO_WORKFLOW_RUNNING_INFO = 'All nightly cron job were not run. Please make sure there at least exists one cron job running.'.freeze
-excluded_workflows = []
-issue_labels = ""
-issue_title = "Auto-Generated Testing Report"
+EXCLUDED_WORKFLOWS = []
+ISSUE_LABELS = ""
+ISSUE_TITLE = "Auto-Generated Testing Report"
 
 if not ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].nil?
-  excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(/[ ,]/)
+  EXCLUDED_WORKFLOWS = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(/[ ,]/)
 end
 if not ENV['INPUT_ISSUE-LABELS'].nil?
-  issue_labels = ENV['INPUT_ISSUE-LABELS']
+  ISSUE_LABELS = ENV['INPUT_ISSUE-LABELS']
 end
 if not ENV['INPUT_ISSUE-TITLE'].nil?
-  issue_title = ENV['INPUT_ISSUE-TITLE']
+  ISSUE_TITLE = ENV['INPUT_ISSUE-TITLE']
 end
-assignee = ENV['INPUT_ASSIGNEES']
+ASSIGNEE = ENV['INPUT_ASSIGNEES']
 
 class Table
   def initialize(title)
@@ -50,13 +50,13 @@ class Table
   end 
 end 
 
-failure_report = Table.new(issue_title)
-success_report = Table.new(issue_title)
+failure_report = Table.new(ISSUE_TITLE)
+success_report = Table.new(ISSUE_TITLE)
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
-last_issue = client.list_issues(REPO_NAME_WITH_OWNER, :labels => issue_labels, :state => "all")[0]
+last_issue = client.list_issues(REPO_NAME_WITH_OWNER, :labels => ISSUE_LABELS, :state => "all")[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
 
-puts "Excluded workflow files: " + excluded_workflows.join(",")
+puts "Excluded workflow files: " + EXCLUDED_WORKFLOWS.join(",")
 for wf in workflows.workflows do
   # skip if it is the issue generation workflow.
   if wf.name == ENV["GITHUB_WORKFLOW"]
@@ -70,7 +70,7 @@ for wf in workflows.workflows do
   latest_run = runs[0]
   if latest_run.nil?
     puts "no schedule runs found."
-  elsif excluded_workflows.include?(workflow_file)
+  elsif EXCLUDED_WORKFLOWS.include?(workflow_file)
     puts workflow_file + " is excluded in the report."
   elsif Time.now.utc - latest_run.created_at < 86400
     result_text = "[%s](%s)" % [latest_run.conclusion.nil? ? "in_process" : latest_run.conclusion, latest_run.html_url]
@@ -87,7 +87,7 @@ if failure_report.get_report.nil? && success_report.get_report.nil?
   if last_issue.state == "open"
     client.add_comment(REPO_NAME_WITH_OWNER, last_issue.number, NO_WORKFLOW_RUNNING_INFO)
   else
-    client.create_issue(REPO_NAME_WITH_OWNER, issue_title, NO_WORKFLOW_RUNNING_INFO, labels: issue_labels, assignee: assignee)
+    client.create_issue(REPO_NAME_WITH_OWNER, ISSUE_TITLE, NO_WORKFLOW_RUNNING_INFO, labels: ISSUE_LABELS, assignee: ASSIGNEE)
   end
 # Close an issue if all workflows succeed.
 elsif failure_report.get_report.nil? and last_issue.state == "open"
@@ -99,5 +99,5 @@ elsif !last_issue.nil? and last_issue.state == "open"
   last_issue.add_comment(REPO_NAME_WITH_OWNER, last_issue.number,failure_report.get_report)
 # Creat an new issue otherwise.
 else
-  client.create_issue(REPO_NAME_WITH_OWNER, issue_title, failure_report.get_report, labels: issue_labels, assignee: assignee)
+  client.create_issue(REPO_NAME_WITH_OWNER, ISSUE_TITLE, failure_report.get_report, labels: ISSUE_LABELS, assignee: ASSIGNEE)
 end
