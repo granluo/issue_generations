@@ -11,8 +11,8 @@ issue_labels = []
 if not ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].nil?
   excluded_workflows = ENV['INPUT_EXCLUDE-WORKFLOW-FILES'].split(/[ ,]/)
 end
-if not ENV['INPUT_ISSUE_LABELS'].nil?
-  issue_labels = ENV['INPUT_ISSUE_LABELS'].split(/[ ,]/)
+if not ENV['INPUT_ISSUE-LABELS'].nil?
+  issue_labels = ENV['INPUT_ISSUE-LABELS'].split(/[ ,]/)
 end
 assignee = ENV['INPUT_ASSIGNEES']
 
