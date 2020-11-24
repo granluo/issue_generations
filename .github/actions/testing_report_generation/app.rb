@@ -65,7 +65,9 @@ for wf in workflows.workflows do
 end
 
 if not last_issue.nil? && last_issue.state == "open"
+  puts last_issue.number
   client.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
+  last_issue.add_comment(REPORT_TESTING_REPO, last_issue.number,report.get_report)
 else
   new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-08:00").strftime('%m/%d/%Y %H:%M %p'), report.get_report, labels: issue_labels, assignee: assignee)
 end
