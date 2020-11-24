@@ -5,8 +5,8 @@ require 'optparse'
 require "json"
 
 pp ENV
-REPO_NAME_WITH_OWNER = 'firebase/firebase-ios-sdk'.freeze
-REPORT_TESTING_REPO = 'granluo/issue_generations'.freeze
+REPO_NAME_WITH_OWNER = 'granluo/issue_generations'.freeze
+NO_WORKFLOW_RUNNING_INFO = 'All nightly cron job were not run. Please make sure there at least exists one cron job running.'.freeze
 excluded_workflows = []
 issue_labels = ""
 issue_title = "Auto-Generated Testing Report"
@@ -53,7 +53,7 @@ end
 failure_report = Table.new(issue_title)
 success_report = Table.new(issue_title)
 client = Octokit::Client.new(access_token: ENV["INPUT_ACCESS-TOKEN"])
-last_issue = client.list_issues(REPORT_TESTING_REPO, :labels => issue_labels, :state => "all")[0]
+last_issue = client.list_issues(REPO_NAME_WITH_OWNER, :labels => issue_labels, :state => "all")[0]
 workflows = client.workflows(REPO_NAME_WITH_OWNER)
 
 puts "Excluded workflow files: " + excluded_workflows.join(",")
@@ -73,33 +73,31 @@ for wf in workflows.workflows do
   elsif excluded_workflows.include?(workflow_file)
     puts workflow_file + " is excluded in the report."
   elsif Time.now.utc - latest_run.created_at < 86400
-    puts latest_run.event + " "
-    puts latest_run.html_url + " "
-    puts latest_run.created_at.to_s + " "
-    puts latest_run.conclusion
     result_text = "[%s](%s)" % [latest_run.conclusion.nil? ? "in_process" : latest_run.conclusion, latest_run.html_url]
     if latest_run.conclusion == "success"
-      # success_report.add_workflow_run_and_result(workflow_text, result_text)
+      success_report.add_workflow_run_and_result(workflow_text, result_text)
     else
-      # failure_report.add_workflow_run_and_result(workflow_text, result_text)
+      failure_report.add_workflow_run_and_result(workflow_text, result_text)
     end
   end
 end
 
-puts "issue %s is currently %s" % [last_issue.number, last_issue.state]
+# Check if there exists any cron jobs.
 if failure_report.get_report.nil? && success_report.get_report.nil?
   if last_issue.state == "open"
-    client.add_comment(REPORT_TESTING_REPO, last_issue.number, "Nightly Testings were not run.")
+    client.add_comment(REPO_NAME_WITH_OWNER, last_issue.number, NO_WORKFLOW_RUNNING_INFO)
   else
-    client.create_issue(REPORT_TESTING_REPO, issue_title, "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
+    client.create_issue(REPO_NAME_WITH_OWNER, issue_title, NO_WORKFLOW_RUNNING_INFO, labels: issue_labels, assignee: assignee)
   end
+# Close an issue if all workflows succeed.
 elsif failure_report.get_report.nil? and last_issue.state == "open"
-  client.add_comment(REPORT_TESTING_REPO, last_issue.number, success_report.get_report)
-  client.close_issue(REPORT_TESTING_REPO, last_issue.number)
+  client.add_comment(REPO_NAME_WITH_OWNER, last_issue.number, success_report.get_report)
+  client.close_issue(REPO_NAME_WITH_OWNER, last_issue.number)
+# If the last issue is open, then failed report will be commented to the issue.
 elsif !last_issue.nil? and last_issue.state == "open"
-  puts last_issue.number
-  client.add_comment(REPORT_TESTING_REPO, last_issue.number,failure_report.get_report)
-  last_issue.add_comment(REPORT_TESTING_REPO, last_issue.number,failure_report.get_report)
+  client.add_comment(REPO_NAME_WITH_OWNER, last_issue.number,failure_report.get_report)
+  last_issue.add_comment(REPO_NAME_WITH_OWNER, last_issue.number,failure_report.get_report)
+# Creat an new issue otherwise.
 else
-  new_issue = client.create_issue(REPORT_TESTING_REPO, 'Nightly Testing Report' + Time.now.utc.localtime("-08:00").strftime('%m/%d/%Y %H:%M %p'), failure_report.get_report, labels: issue_labels, assignee: assignee)
+  client.create_issue(REPO_NAME_WITH_OWNER, issue_title, failure_report.get_report, labels: issue_labels, assignee: assignee)
 end
