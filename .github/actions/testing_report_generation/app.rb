@@ -58,7 +58,10 @@ for wf in workflows.workflows do
   elsif excluded_workflows.include?(workflow_file)
     puts workflow_file + " is excluded in the report."
   elsif Time.now.utc - latest_run.created_at < 86400
-    puts latest_run.event + latest_run.html_url + " " + latest_run.created_at.to_s + " " + latest_run.conclusion
+    puts latest_run.event + " "
+    puts latest_run.html_url + " "
+    puts latest_run.created_at.to_s + " "
+    puts latest_run.conclusion
     result_text = "[%s](%s)" % [latest_run.conclusion, latest_run.html_url]
     report.add_workflow_run_and_result(workflow_text, result_text) unless latest_run.conclusion == "success"
   end
