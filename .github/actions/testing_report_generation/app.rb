@@ -91,7 +91,7 @@ if failure_report.get_report.nil? && success_report.get_report.nil?
   if last_issue.state == "open"
     client.add_comment(REPORT_TESTING_REPO, last_issue.number, "Nightly Testings were not run.")
   else
-    client.create_issue(REPORT_TESTING_REPO, issue_title, "Nightly Testing Report", "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
+    client.create_issue(REPORT_TESTING_REPO, issue_title, "Nightly Testings were not run.", labels: issue_labels, assignee: assignee)
   end
 elsif failure_report.get_report.nil? and last_issue.state == "open"
   client.add_comment(REPORT_TESTING_REPO, last_issue.number, success_report.get_report)
