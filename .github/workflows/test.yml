@@ -39,3 +39,4 @@ jobs:
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
+          echo "see if it works."
