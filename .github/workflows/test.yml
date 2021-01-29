@@ -49,4 +49,6 @@ jobs:
           echo "${{ github.head_ref }}"
           echo "${{ github.base_ref }}"
           echo "${{ github.ref }}"
+          echo "${GITHUB_REF##*/}"
+          echo ${GITHUB_REF##*/}
           echo "see if it works."
