@@ -34,3 +34,8 @@ jobs:
         with: 
           name: job_log_link
           path: id_artifact.txt
+      - name: run after merge
+        if: github.action == 'closed' && github.event.pull_request.merged == true
+        run: |
+          echo "the branch is here."
+          echo "${{ github.head_ref }}"
