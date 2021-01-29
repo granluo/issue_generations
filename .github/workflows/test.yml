@@ -1,6 +1,6 @@
 name: test_issue_generation
 
-on: [pull_request,push]
+on: [push, pull_request]
 
 jobs:
   get_link:
