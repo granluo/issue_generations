@@ -38,9 +38,12 @@ jobs:
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
+          echo "${{ github.base_ref }}"
+          echo "the branch is here."
       - name: run after merge
         if: github.event_name == 'push'
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
+          echo "${{ github.base_ref }}"
           echo "see if it works."
