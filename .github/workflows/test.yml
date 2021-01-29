@@ -34,12 +34,12 @@ jobs:
           name: job_log_link
           path: id_artifact.txt
       - name: run after each pr
-        if: github.event_name == "pull_request"
+        if: github.event_name == 'pull_request'
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
       - name: run after merge
-        if: github.event_name == "push"
+        if: github.event_name == ;push'
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
