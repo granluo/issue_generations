@@ -2,6 +2,7 @@ name: test_issue_generation
 
 on: [push, pull_request]
 
+
 jobs:
   get_link:
     runs-on: macOS-latest
