@@ -26,6 +26,9 @@ jobs:
       - name: Get Job Link
         run: |
           echo "https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          echo $GITHUB_EVENT_PATH
+          cat $GITHUB_EVENT_PATH
+          echo "github event path"
       - uses: actions/download-artifact@v2
         with: 
           name: job_log_link
