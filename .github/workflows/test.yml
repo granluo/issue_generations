@@ -1,8 +1,6 @@
 name: test_issue_generation
 
-on:
-  pull_request:
-    types: [synchronize, closed]
+on: [pull_request]
 
 
 jobs:
