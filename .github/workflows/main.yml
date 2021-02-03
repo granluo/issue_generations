@@ -6,13 +6,5 @@ jobs:
     name: A job to say hello
     steps:
     - uses: actions/checkout@v2
-    - name: Hello world action step
-      id: hello
-      uses: ./.github/actions/hello-docker
-      with:
-        who-to-greet: 'Mona the Octocat'
-        access-token: '${{ secrets.ISSUE_TEST_TOKEN }}'
-        exclude-workflow-files: 'performance.yml performance-integration-tests.yml'
-    # Use the output from the `hello` step
     - name: Get the output time
-      run: echo "The time was ${{ steps.hello.outputs.time }}"
+      run: echo "The time was "
