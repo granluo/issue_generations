@@ -23,14 +23,13 @@ jobs:
         env:
           pr_branch: "pr_branch"
         run: |
-          echo "::set-output name=database_run_job::false"
-          echo "::set-output name=functions_run_job::false"
-
+          echo "::set-output name=database_run_job::true"
+          echo "::set-output name=functions_run_job::true"
           echo "::set-output name=base_commit::asdf"
 
   pod-lib-lint-database:
     # Don't run on private repo unless it is a PR.
-    if: github.repository == 'granluo/issue_generations' && (needs.check.outputs.database_run_job == 'true' || github.event.pull_request.merged == true)
+    if: github.repository == 'granluo/issue_generations' && (github.event.pull_request.merged == true || needs.check.outputs.database_run_job == 'true')
     needs: check
     runs-on: macOS-latest
     strategy:
@@ -43,7 +42,7 @@ jobs:
 
   pod-lib-lint-functions:
     # Don't run on private repo unless it is a PR.
-    if: github.repository == 'granluo/issue_generations' && (needs.check.outputs.functions_run_job == 'true' || github.event.pull_request.merged == true)
+    if: github.repository == 'granluo/issue_generations' && (github.event.pull_request.merged == true || needs.check.outputs.functions == 'true')
     needs: check
     runs-on: macOS-latest
     strategy:
@@ -64,6 +63,7 @@ jobs:
         run: |
           # Install gcloud sdk
           echo "install gcloud"
+          echo $GITHUB_EVENT_PATH
       - name: Compare Diff and Post a Report
         if: github.event_name == 'pull_request'
         env:
