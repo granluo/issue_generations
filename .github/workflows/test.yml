@@ -2,7 +2,7 @@ name: test_issue_generation
 
 on:
   pull_request:
-    types: [synchronize, closed]
+    types: [open, synchronize, closed]
 
 
 jobs:
