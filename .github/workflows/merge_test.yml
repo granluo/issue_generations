@@ -64,6 +64,11 @@ jobs:
           # Install gcloud sdk
           echo "install gcloud"
           echo $GITHUB_EVENT_PATH
+          cat $GITHUB_EVENT_PATH
+          echo "---------------"
+          echo ${{ github.repository }}
+          echo ${{ github.event.pull_request.merged }}
+          echo ${{ needs.check.outputs.functions }}
       - name: Compare Diff and Post a Report
         if: github.event_name == 'pull_request'
         env:
