@@ -6,7 +6,7 @@ on:
 
 jobs:
   check:
-    if: github.repository == 'granluo/issue_generations' && github.event.action == 'synchronize'
+    if: github.repository == 'granluo/issue_generations' && github.event.action != 'closed'
     name: Check changed files
     outputs:
       database_run_job: ${{ steps.check_files.outputs.database_run_job }}
