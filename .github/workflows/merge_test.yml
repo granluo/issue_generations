@@ -55,7 +55,7 @@ jobs:
 
   create_report:
     needs: [check, pod-lib-lint-functions, pod-lib-lint-database]
-    if: always() && github.repository == 'granluo/issue_generations'
+    if: always() && github.repository != 'granluo/issue_generations'
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
