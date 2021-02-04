@@ -24,7 +24,7 @@ jobs:
           pr_branch: "pr_branch"
         run: |
           echo "::set-output name=database_run_job::false"
-          echo "::set-output name=functions_run_job::true"
+          #echo "::set-output name=functions_run_job::true"
           echo "::set-output name=base_commit::asdf"
 
   pod-lib-lint-database:
