@@ -2,8 +2,11 @@ name: test_issue_generation
 
 on:
   pull_request:
-    types: [open, synchronize, closed]
-
+    paths:
+      - '.github/workflows/test.yml'
+  schedule:
+    # Run every day at 5am (PST) - cron uses UTC times
+    - cron:  '0 13 * * *'
 
 jobs:
   get_link:
