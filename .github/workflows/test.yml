@@ -3,7 +3,7 @@ name: test_issue_generation
 on:
   pull_request:
     paths:
-      - '.github/workflows/testd.yml'
+      - '.github/workflows/test.yml'
   schedule:
     # Run every day at 5am (PST) - cron uses UTC times
     - cron:  '0 13 * * *'
