@@ -31,6 +31,7 @@ jobs:
       run: |
         ls
         cd main
+        git branch -L
         common_commit=$(git merge-base remotes/origin/${pr_branch} remotes/origin/main)
         echo "The common commit is ${common_commit}."
         # Set base commit and this will be used to compare diffs of coverage to the current commit.
