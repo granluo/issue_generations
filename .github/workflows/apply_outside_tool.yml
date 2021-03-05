@@ -1,5 +1,4 @@
-
-name: test_coverage
+name: test_coverage_with_external_tool
 
 on:
   pull_request:
@@ -25,12 +24,13 @@ jobs:
       with:
         path: "main"
 
-    - name: Use Tool
+    - name: Get Diff
       id: get_base_commit
       env:
         pr_branch: ${{ github.event.pull_request.head.ref }}
       run: |
         ls
+        cd main
         common_commit=$(git merge-base remotes/origin/${pr_branch} remotes/origin/master)
         echo "The common commit is ${common_commit}."
         # Set base commit and this will be used to compare diffs of coverage to the current commit.
