@@ -18,6 +18,10 @@ jobs:
       with:
         repository: "firebase/firebase-ios-sdk"
         path: "tool"
+    - name: Build tool
+      run: |
+        cd tool/scripts/code_coverage_report/generate_code_coverage_report
+        swift build
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -39,3 +43,4 @@ jobs:
         echo "::set-output name=base_commit::${common_commit}"
         git diff --name-only $common_commit remotes/origin/${pr_branch} > updated_files.txt
         cat updated_files.txt
+        ../tool/scripts/code_coverage_report/generate_code_coverage_report/.build/debug/CoverageReportGenerator
