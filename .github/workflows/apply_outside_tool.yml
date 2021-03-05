@@ -38,3 +38,4 @@ jobs:
         # Set base commit and this will be used to compare diffs of coverage to the current commit.
         echo "::set-output name=base_commit::${common_commit}"
         git diff --name-only $common_commit remotes/origin/${pr_branch} > updated_files.txt
+        cat updated_files.txt
