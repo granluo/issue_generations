@@ -63,6 +63,11 @@ jobs:
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
+          echo "====="
+          echo "${GITHUB_SHA}"
+          GITHUB_SHA=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.head.sha)
+          echo "${GITHUB_SHA}"
+          echo "====="
           echo "${{ github.base_ref }}"
           echo "${{ github.ref }}"
           echo "${GITHUB_REF##*/}"
