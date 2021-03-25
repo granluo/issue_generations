@@ -47,11 +47,27 @@ jobs:
           echo "${{ github.base_ref }}"
           echo "${{ github.ref }}"
           echo "the branch is here."
+      - name: run when not merge
+        if: github.event.pull_request.merged != true
+        run: |
+          echo "the branch is here."
+          echo "${{ github.head_ref }}"
+          echo "${{ github.base_ref }}"
+          echo "${{ github.ref }}"
+          echo "${GITHUB_REF##*/}"
+          echo ${GITHUB_REF##*/}
+          echo "see if it works."
+          cat $GITHUB_EVENT_PATH
       - name: run after merge
         if: github.event.pull_request.merged == true
         run: |
           echo "the branch is here."
           echo "${{ github.head_ref }}"
+          echo "====="
+          echo "${GITHUB_SHA}"
+          GITHUB_SHA=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.head.sha)
+          echo "${GITHUB_SHA}"
+          echo "====="
           echo "${{ github.base_ref }}"
           echo "${{ github.ref }}"
           echo "${GITHUB_REF##*/}"
