@@ -3,9 +3,6 @@ on:
   pull_request:
     paths:
     - '.github/workflows/generate_issues.yml'
-  schedule:
-    # Run every day at 4am (PST) - cron uses UTC times
-    - cron:  '0 12 * * *'
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
