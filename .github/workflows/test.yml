@@ -84,6 +84,14 @@ jobs:
         uses: rlespinasse/github-slug-action@v3.x
       - name: Print slug/short variables
         run: |
+          echo "test github ref"
+          
+          echo "====="
+          echo "${{ github.base_ref }}"
+          echo "${{ github.ref }}"
+          echo "${GITHUB_REF##*/}"
+          echo ${GITHUB_REF##*/}
+          echo "see if it works."
           echo "github base ref variables"
           echo "${GITHUB_BASE_REF}"
           echo "${GITHUB_HEAD_REF}"
