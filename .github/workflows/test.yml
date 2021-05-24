@@ -63,6 +63,7 @@ jobs:
           echo ${GITHUB_REF##*/}
           echo "see if it works."
           cat $GITHUB_EVENT_PATH
+          echo "${GITHUB_BASE_REF}"
       - name: run after merge
         if: github.event.pull_request.merged == true
         run: |
