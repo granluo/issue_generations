@@ -4,8 +4,10 @@ name: test_issue_generation
 on:
   push:
   pull_request:
-    paths:
-    - '.github/workflows/test.yml'
+    # open will be triggered when a pull request is created.
+    # synchronize will be triggered when a pull request has new commits.
+    # closed will be triggered when a pull request is closed.
+    types: [opened, synchronize, closed]
   schedule:
     # Run every day at 5am (PST) - cron uses UTC times
     - cron:  '0 13 * * *'
