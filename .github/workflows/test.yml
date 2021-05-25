@@ -91,6 +91,7 @@ jobs:
           echo "${{ github.ref }}"
           echo "${GITHUB_REF##*/}"
           echo ${GITHUB_REF##*/}
+          echo "${{ github.base_ref }}"
           echo "see if it works."
           echo "github base ref variables"
           echo "${GITHUB_BASE_REF}"
