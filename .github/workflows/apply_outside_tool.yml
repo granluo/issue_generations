@@ -1,0 +1,46 @@
+name: test_coverage_with_external_tool
+
+on:
+  pull_request:
+    # open will be triggered when a pull request is created.
+    # synchronize will be triggered when a pull request has new commits.
+    # closed will be triggered when a pull request is closed.
+    types: [opened, synchronize, closed]
+
+jobs:
+  setup:
+    outputs:
+      base_commit: ${{ steps.get_base_commit.outputs.base_commit }}
+    runs-on: macOS-latest
+    steps:
+    - name: Checkout tools
+      uses: actions/checkout@v2
+      with:
+        repository: "firebase/firebase-ios-sdk"
+        path: "tool"
+    - name: Build tool
+      run: |
+        cd tool/scripts/code_coverage_report/generate_code_coverage_report
+        swift build
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: "main"
+        fetch-depth: 0
+
+    - name: Get Diff
+      id: get_base_commit
+      env:
+        pr_branch: ${{ github.event.pull_request.head.ref }}
+      run: |
+        ls
+        cd main
+        git branch -la
+        common_commit=$(git merge-base remotes/origin/${pr_branch} remotes/origin/main)
+        echo "The common commit is ${common_commit}."
+        # Set base commit and this will be used to compare diffs of coverage to the current commit.
+        echo "::set-output name=base_commit::${common_commit}"
+        git diff --name-only $common_commit remotes/origin/${pr_branch} > updated_files.txt
+        cat updated_files.txt
+        ../tool/scripts/code_coverage_report/generate_code_coverage_report/.build/debug/CoverageReportGenerator
